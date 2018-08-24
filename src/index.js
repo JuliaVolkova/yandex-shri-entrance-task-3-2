@@ -72,6 +72,29 @@ const mode = {
 };
 
 /**
+ * @typedef {Object} Rate
+ * @property {Number} from
+ * @property {Number} to
+ * @property {Number} value
+ */
+
+/**
+ * @typedef {Object} Device
+ * @property {String} id
+ * @property {String} name
+ * @property {Number} power
+ * @property {Number} duration
+ * @property {String} [mode]
+ */
+
+/**
+ * @typedef {Object} Schedule
+ * @property {Array.<Device>} 0
+ */
+
+/**
+ * Create array of numbers in given range.
+ *
  * @param {Number} start
  * @param {Number} end
  * @param {Number} step
@@ -82,6 +105,12 @@ function range(start, end, step = 1) {
 }
 
 /**
+ * Implementation of sliding windows algorithm.
+ *
+ * [a, b, c, d, e] of 3 =>
+ * [a, b, c]
+ *    [b, c, d]
+ *       [c, d, e]
  * @example sliding([a, b, c, d, e], 3) => [[a, b, c], [b, c, d], [c, d, e]]
  * @template T
  * @param {Array.<T>} array
@@ -95,6 +124,8 @@ function sliding(array, size) {
 }
 
 /**
+ * Compares two elements of type {@code T} for sorting (in ascending order).
+ *
  * @template T
  * @param {T} left
  * @param {T} right
@@ -105,6 +136,8 @@ function defaultCompare(left, right) {
 }
 
 /**
+ * Decorates passed comparison function with reversing its result.
+ *
  * @template T
  * @param {Function.<T, T, Number>} compare
  * @returns {Function.<T, T, Number>}
@@ -116,6 +149,9 @@ function reversed(compare = defaultCompare) {
 }
 
 /**
+ * Builds comparison function using extract function to get property from two elements
+ * and comparison function that compares them.
+ *
  * @template T, R
  * @param {Function.<T, R>} extract
  * @param {Function.<R, R, Number>} [compare = defaultCompare]
@@ -128,11 +164,10 @@ function comparing(extract, compare = defaultCompare) {
 }
 
 /**
+ * Generates possible schedule for passed device
  *
- * @param {Object} device
- * @param {Number} device.duration
- * @param {String} device.mode
- * @returns {Array.<Array>} schedule
+ * @param {Device} device
+ * @returns {Array.<Schedule>} schedule
  */
 function createPossibleSchedules(device) {
     const periods = sliding(mode[device.mode] || mode.allDay, device.duration);
@@ -141,19 +176,14 @@ function createPossibleSchedules(device) {
 }
 
 /**
- *
- * @param {Array.<Object>} devices
- * @param {Number} devices[].duration
- * @param {String} devices[].mode
- * @param {Array.<Object>} rates
+ * @param {Array.<Device>} devices
+ * @param {Array.<Rate>} rates
  * @param {Number} maxPower
- * @returns {Array.<Array>} schedule
+ * @returns {Schedule} schedule
  */
 function superFunction(devices, rates, maxPower) {
     return devices
         .slice()
-        .sort(reversed(comparing(({duration}) => duration)))
+        .sort(comparing(({duration}) => duration, reversed()))
         .map(createPossibleSchedules)
 }
-
-console.log('work!', superFunction(devices, rates, maxPower));
