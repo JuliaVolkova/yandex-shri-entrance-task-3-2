@@ -1,0 +1,24 @@
+{
+  "name": "entrance-task-3-2",
+  "version": "1.0.0",
+  "description": "Smart home",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
+  },
+  "scripts": {
+    "test": "mocha —reporter spec tests/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuliaVolkova/yandex-shri-entrance-task-3-2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JuliaVolkova/yandex-shri-entrance-task-3-2/issues"
+  },
+  "homepage": "https://github.com/JuliaVolkova/yandex-shri-entrance-task-3-2#readme"
+}
